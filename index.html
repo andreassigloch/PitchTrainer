@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pitch Trainer - Professionelles Training</title>
+    <style>
+        :root {
+            --primary: #1e40af;
+            --accent: #059669;
+            --background: #f8fafc;
+            --text: #374151;
+            --white: #ffffff;
+            --gray-light: #e5e7eb;
+            --gray-medium: #9ca3af;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .header {
+            background: var(--primary);
+            color: var(--white);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 32px 24px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Timer Selection Screen */
+        .timer-selection h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: var(--primary);
+        }
+
+        .timer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .timer-button {
+            padding: 16px;
+            border: 2px solid var(--gray-light);
+            background: var(--white);
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 60px;
+        }
+
+        .timer-button:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .timer-button.selected {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .selected-time {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 24px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Recording Screen */
+        .recording-screen {
+            text-align: center;
+        }
+
+        .timer-display {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .timer-label {
+            color: var(--gray-medium);
+            margin-bottom: 32px;
+        }
+
+        .recording-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #dc2626;
+        }
+
+        .recording-dot {
+            width: 16px;
+            height: 16px;
+            background: #dc2626;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .transcript-box {
+            background: var(--background);
+            border: 2px solid var(--gray-light);
+            border-radius: 12px;
+            padding: 24px;
+            min-height: 200px;
+            text-align: left;
+            margin-bottom: 32px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .transcript-placeholder {
+            color: var(--gray-medium);
+            font-style: italic;
+        }
+
+        /* Analysis Screen */
+        .score-display {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .score-number {
+            font-size: 64px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .score-bar {
+            width: 200px;
+            height: 8px;
+            background: var(--gray-light);
+            border-radius: 4px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: var(--accent);
+            transition: width 1s ease-out;
+        }
+
+        .analysis-items {
+            background: var(--background);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .analysis-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            font-size: 16px;
+        }
+
+        .analysis-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .analysis-icon {
+            font-size: 20px;
+        }
+
+        .recommendations {
+            background: var(--background);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .recommendations h3 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: var(--primary);
+        }
+
+        .recommendations ul {
+            list-style: none;
+        }
+
+        .recommendations li {
+            margin-bottom: 12px;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .recommendations li:before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Buttons */
+        .button {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 56px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .button-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .button-primary:hover {
+            background: #1e3a8a;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .button-secondary {
+            background: var(--gray-light);
+            color: var(--text);
+        }
+
+        .button-secondary:hover {
+            background: #d1d5db;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .button-danger {
+            background: #dc2626;
+            color: var(--white);
+        }
+
+        .button-danger:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 16px;
+        }
+
+        .button-group .button {
+            flex: 1;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: var(--white);
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 640px) {
+            .container {
+                border-radius: 0;
+                height: 100vh;
+                max-width: 100%;
+            }
+
+            .content {
+                padding: 24px 16px;
+            }
+
+            .timer-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .score-number {
+                font-size: 48px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎤 Pitch Trainer</h1>
+            <p>Professionelles Training</p>
+        </div>
+
+        <div class="content">
+            <!-- Timer Selection Screen -->
+            <div id="timerScreen" class="screen active">
+                <h2>Timer-Einstellung:</h2>
+                <div class="timer-grid">
+                    <button class="timer-button" data-time="30">30s</button>
+                    <button class="timer-button" data-time="35">35s</button>
+                    <button class="timer-button" data-time="40">40s</button>
+                    <button class="timer-button" data-time="45">45s</button>
+                    <button class="timer-button" data-time="50">50s</button>
+                    <button class="timer-button" data-time="55">55s</button>
+                    <button class="timer-button selected" data-time="60">60s</button>
+                    <button class="timer-button" data-time="65">65s</button>
+                    <button class="timer-button" data-time="70">70s</button>
+                    <button class="timer-button" data-time="75">75s</button>
+                    <button class="timer-button" data-time="80">80s</button>
+                    <button class="timer-button" data-time="85">85s</button>
+                    <button class="timer-button" data-time="90">90s</button>
+                    <button class="timer-button" data-time="95">95s</button>
+                    <button class="timer-button" data-time="100">100s</button>
+                    <button class="timer-button" data-time="105">105s</button>
+                    <button class="timer-button" data-time="110">110s</button>
+                    <button class="timer-button" data-time="115">115s</button>
+                    <button class="timer-button" data-time="120">120s</button>
+                </div>
+                <div class="selected-time">Gewählt: <span id="selectedTime">60</span> Sekunden</div>
+                <button id="startButton" class="button button-primary">
+                    🎤 Training starten
+                </button>
+            </div>
+
+            <!-- Recording Screen -->
+            <div id="recordingScreen" class="screen">
+                <div class="recording-screen">
+                    <div class="timer-display" id="timerDisplay">00:60</div>
+                    <div class="timer-label">(verbleibend)</div>
+                    
+                    <div class="recording-status">
+                        <div class="recording-dot"></div>
+                        AUFNAHME LÄUFT
+                    </div>
+
+                    <div class="transcript-box" id="transcriptBox">
+                        <span class="transcript-placeholder">Sprechen Sie jetzt...</span>
+                    </div>
+
+                    <button id="stopButton" class="button button-danger">
+                        ⏹️ Beenden
+                    </button>
+                </div>
+            </div>
+
+            <!-- Analysis Screen -->
+            <div id="analysisScreen" class="screen">
+                <div class="score-display">
+                    <div class="score-number" id="scoreNumber">0%</div>
+                    <div class="score-bar">
+                        <div class="score-fill" id="scoreFill"></div>
+                    </div>
+                </div>
+
+                <div class="analysis-items" id="analysisItems">
+                    <!-- Analysis items will be inserted here -->
+                </div>
+
+                <div class="recommendations">
+                    <h3>Empfehlungen:</h3>
+                    <ul id="recommendationsList">
+                        <!-- Recommendations will be inserted here -->
+                    </ul>
+                </div>
+
+                <div class="button-group">
+                    <button id="copyButton" class="button button-secondary">
+                        📋 Kopie
+                    </button>
+                    <button id="retryButton" class="button button-primary">
+                        🔄 Nochmal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // App state
+        let selectedTime = 60;
+        let remainingTime = 60;
+        let timerInterval = null;
+        let recognition = null;
+        let transcript = '';
+        let startTime = null;
+        let actualDuration = 0;
+
+        // Filler words to detect
+        const fillerWords = ['äh', 'ähm', 'also', 'halt', 'sozusagen', 'quasi', 'eigentlich', 'irgendwie', 'ja', 'ne'];
+        
+        // Positive sentiment words
+        const positiveWords = ['erfolgreich', 'steigern', 'verbessern', 'optimal', 'effizient', 'lösung', 'vorteil', 'gewinn', 'wachstum', 'innovation'];
+        
+        // Call-to-action phrases
+        const ctaPhrases = ['kontaktieren sie', 'rufen sie', 'besuchen sie', 'vereinbaren sie', 'melden sie sich', 'lassen sie uns', 'jetzt', 'heute noch'];
+
+        // DOM elements
+        const timerScreen = document.getElementById('timerScreen');
+        const recordingScreen = document.getElementById('recordingScreen');
+        const analysisScreen = document.getElementById('analysisScreen');
+        const timerButtons = document.querySelectorAll('.timer-button');
+        const selectedTimeSpan = document.getElementById('selectedTime');
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const transcriptBox = document.getElementById('transcriptBox');
+        const scoreNumber = document.getElementById('scoreNumber');
+        const scoreFill = document.getElementById('scoreFill');
+        const analysisItems = document.getElementById('analysisItems');
+        const recommendationsList = document.getElementById('recommendationsList');
+        const copyButton = document.getElementById('copyButton');
+        const retryButton = document.getElementById('retryButton');
+        const toast = document.getElementById('toast');
+
+        // Timer button selection
+        timerButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                timerButtons.forEach(b => b.classList.remove('selected'));
+                button.classList.add('selected');
+                selectedTime = parseInt(button.dataset.time);
+                selectedTimeSpan.textContent = selectedTime;
+            });
+        });
+
+        // Start recording
+        startButton.addEventListener('click', startRecording);
+        stopButton.addEventListener('click', stopRecording);
+        retryButton.addEventListener('click', resetToStart);
+        copyButton.addEventListener('click', copyToClipboard);
+
+        function showScreen(screen) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            screen.classList.add('active');
+        }
+
+        function startRecording() {
+            remainingTime = selectedTime;
+            transcript = '';
+            startTime = Date.now();
+            
+            showScreen(recordingScreen);
+            updateTimerDisplay();
+            
+            // Start timer
+            timerInterval = setInterval(() => {
+                remainingTime--;
+                updateTimerDisplay();
+                
+                if (remainingTime <= 0) {
+                    stopRecording();
+                }
+            }, 1000);
+
+            // Start speech recognition
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.lang = 'de-DE';
+                recognition.continuous = true;
+                recognition.interimResults = true;
+
+                let finalTranscript = '';
+
+                recognition.onresult = (event) => {
+                    let interimTranscript = '';
+                    
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const result = event.results[i];
+                        if (result.isFinal) {
+                            finalTranscript += result[0].transcript + ' ';
+                        } else {
+                            interimTranscript += result[0].transcript;
+                        }
+                    }
+                    
+                    transcript = finalTranscript;
+                    transcriptBox.innerHTML = finalTranscript + '<span style="color: #9ca3af;">' + interimTranscript + '</span>';
+                };
+
+                recognition.onerror = (event) => {
+                    console.error('Speech recognition error:', event.error);
+                    if (event.error === 'not-allowed') {
+                        showToast('Bitte erlauben Sie den Mikrofonzugriff');
+                    }
+                };
+
+                recognition.start();
+            } else {
+                transcriptBox.innerHTML = '<span style="color: #dc2626;">Spracherkennung wird von Ihrem Browser nicht unterstützt</span>';
+            }
+        }
+
+        function stopRecording() {
+            actualDuration = Math.round((Date.now() - startTime) / 1000);
+            
+            clearInterval(timerInterval);
+            
+            if (recognition) {
+                recognition.stop();
+            }
+
+            analyzeAndShowResults();
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function analyzeAndShowResults() {
+            const analysis = analyzeTranscript();
+            const score = calculateScore(analysis);
+            
+            showScreen(analysisScreen);
+            
+            // Animate score
+            scoreNumber.textContent = '0%';
+            scoreFill.style.width = '0%';
+            
+            setTimeout(() => {
+                scoreNumber.textContent = score + '%';
+                scoreFill.style.width = score + '%';
+            }, 100);
+
+            // Display analysis items
+            analysisItems.innerHTML = '';
+            analysis.items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'analysis-item';
+                div.innerHTML = `<span class="analysis-icon">${item.icon}</span><span>${item.text}</span>`;
+                analysisItems.appendChild(div);
+            });
+
+            // Display recommendations
+            recommendationsList.innerHTML = '';
+            analysis.recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.textContent = rec;
+                recommendationsList.appendChild(li);
+            });
+        }
+
+        function analyzeTranscript() {
+            const wordCount = transcript.trim().split(/\s+/).filter(w => w.length > 0).length;
+            const wordsPerSecond = wordCount / actualDuration;
+            const transcriptLower = transcript.toLowerCase();
+            
+            // Count filler words
+            let fillerCount = 0;
+            fillerWords.forEach(filler => {
+                const regex = new RegExp('\\b' + filler + '\\b', 'gi');
+                const matches = transcriptLower.match(regex);
+                fillerCount += matches ? matches.length : 0;
+            });
+
+            // Check sentiment
+            let positiveCount = 0;
+            positiveWords.forEach(word => {
+                if (transcriptLower.includes(word)) positiveCount++;
+            });
+            const hasPositiveSentiment = positiveCount >= 2;
+
+            // Check for call-to-action
+            let hasCTA = false;
+            ctaPhrases.forEach(phrase => {
+                if (transcriptLower.includes(phrase)) {
+                    hasCTA = true;
+                }
+            });
+
+            // Check for numbers (specificity)
+            const hasNumbers = /\d+/.test(transcript);
+
+            // Build analysis
+            const items = [];
+            const recommendations = [];
+
+            // Time analysis
+            if (actualDuration >= 30 && actualDuration <= 60) {
+                items.push({ icon: '✅', text: `Zeit: ${actualDuration}s (Optimal)` });
+            } else if (actualDuration < 30) {
+                items.push({ icon: '⚠️', text: `Zeit: ${actualDuration}s (Zu kurz)` });
+                recommendations.push('Nehmen Sie sich mehr Zeit für Ihren Pitch');
+            } else {
+                items.push({ icon: '⚠️', text: `Zeit: ${actualDuration}s (Zu lang)` });
+                recommendations.push('Fassen Sie sich kürzer und fokussieren Sie auf das Wesentliche');
+            }
+
+            // Filler words
+            if (fillerCount === 0) {
+                items.push({ icon: '✅', text: 'Füllwörter: Keine (Exzellent)' });
+            } else if (fillerCount <= 3) {
+                items.push({ icon: '✅', text: `Füllwörter: ${fillerCount} (Gut)` });
+            } else {
+                items.push({ icon: '⚠️', text: `Füllwörter: ${fillerCount} (Reduzieren)` });
+                recommendations.push('Versuchen Sie, weniger Füllwörter wie "äh" und "also" zu verwenden');
+            }
+
+            // Speaking pace
+            if (wordsPerSecond < 2) {
+                items.push({ icon: '⚠️', text: 'Sprechtempo: Zu langsam' });
+                recommendations.push('Sprechen Sie etwas schneller für mehr Dynamik');
+            } else if (wordsPerSecond > 3) {
+                items.push({ icon: '⚠️', text: 'Sprechtempo: Zu schnell' });
+                recommendations.push('Sprechen Sie langsamer und machen Sie mehr Pausen');
+            } else {
+                items.push({ icon: '✅', text: 'Sprechtempo: Optimal' });
+            }
+
+            // Sentiment
+            if (hasPositiveSentiment) {
+                items.push({ icon: '✅', text: 'Sentiment: Positiv' });
+            } else {
+                items.push({ icon: '⚠️', text: 'Sentiment: Neutral' });
+                recommendations.push('Verwenden Sie mehr positive, motivierende Begriffe');
+            }
+
+            // Call-to-action
+            if (hasCTA) {
+                items.push({ icon: '✅', text: 'Call-to-Action: Klar' });
+            } else {
+                items.push({ icon: '⚠️', text: 'Call-to-Action: Fehlt' });
+                recommendations.push('Fügen Sie eine klare Handlungsaufforderung hinzu');
+            }
+
+            // Specificity
+            if (hasNumbers) {
+                items.push({ icon: '✅', text: 'Spezifität: Mit Zahlen' });
+            } else {
+                items.push({ icon: '⚠️', text: 'Spezifität: Allgemein' });
+                recommendations.push('Verwenden Sie konkrete Zahlen und Fakten');
+            }
+
+            // Additional recommendations
+            if (wordCount < 50) {
+                recommendations.push('Ihr Pitch ist sehr kurz - fügen Sie mehr Details hinzu');
+            }
+
+            if (recommendations.length === 0) {
+                recommendations.push('Exzellente Leistung! Weiter so!');
+            }
+
+            return { items, recommendations };
+        }
+
+        function calculateScore(analysis) {
+            let score = 0;
+            let maxScore = 0;
+
+            analysis.items.forEach(item => {
+                maxScore += 100;
+                if (item.icon === '✅') {
+                    score += 100;
+                } else if (item.icon === '⚠️') {
+                    score += 50;
+                }
+            });
+
+            return Math.round((score / maxScore) * 100);
+        }
+
+        function resetToStart() {
+            transcript = '';
+            transcriptBox.innerHTML = '<span class="transcript-placeholder">Sprechen Sie jetzt...</span>';
+            showScreen(timerScreen);
+        }
+
+        function copyToClipboard() {
+            const analysis = analyzeTranscript();
+            const score = calculateScore(analysis);
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('de-DE');
+            const timeStr = now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+
+            let text = `🎤 PITCH TRAINER - ANALYSE
+==========================
+Datum: ${dateStr}, ${timeStr}
+Dauer: ${actualDuration} Sekunden
+Gesamt-Score: ${score}%
+
+BEWERTUNG:
+`;
+
+            analysis.items.forEach(item => {
+                text += `${item.icon} ${item.text}\n`;
+            });
+
+            text += `
+VERBESSERUNGSVORSCHLÄGE:
+`;
+
+            analysis.recommendations.forEach(rec => {
+                text += `• ${rec}\n`;
+            });
+
+            text += `
+VOLLSTÄNDIGES TRANSKRIPT:
+"${transcript.trim()}"
+
+---
+Erstellt mit Pitch Trainer`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Analyse in Zwischenablage kopiert!');
+            }).catch(err => {
+                console.error('Fehler beim Kopieren:', err);
+                showToast('Fehler beim Kopieren');
+            });
+        }
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize
+        selectedTimeSpan.textContent = selectedTime;
+    </script>
+</body>
+</html>
