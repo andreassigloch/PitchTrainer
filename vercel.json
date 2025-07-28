@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "pitch-trainer.html": {
+      "maxDuration": 10
+    }
+  },
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/pitch-trainer.html"
+    }
+  ]
+}
