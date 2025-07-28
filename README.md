@@ -5,11 +5,11 @@ Professional pitch training application for practicing and analyzing sales pitch
 ## 📱 Quick Access
 
 <div align="center">
-<img src="pitch-trainer-qr.svg" alt="QR Code für Pitch Trainer" width="300">
+<img src="pitch-trainer-final-qr.svg" alt="QR Code für Pitch Trainer" width="300">
 
 **Scan to access instantly!**
 
-🔗 **Live App**: https://pitch-trainer-olxvrmzjc-andreassiglochs-projects.vercel.app
+🔗 **Live App**: https://olive-dode-61.tiiny.site
 </div>
 
 ## Features
