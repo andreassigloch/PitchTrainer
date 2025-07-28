@@ -1,0 +1,187 @@
+# Pitch Trainer - Single File Konzept
+
+## 🎯 App-Struktur für Claude Flow
+
+### Datei: `pitch-trainer.html`
+**Eine einzige HTML-Datei mit embedded CSS und JavaScript**
+
+## 📱 UI-Design: Seriös & Optimal Bedienbar
+
+### Farbschema:
+- **Primär**: Dunkelblau (#1e40af) - vertrauenswürdig, professionell
+- **Akzent**: Grün (#059669) - positiv, erfolgreich
+- **Hintergrund**: Hellgrau (#f8fafc) - sauber, minimal
+- **Text**: Dunkelgrau (#374151) - gut lesbar
+
+### Typografie:
+- **Font**: System-Fonts (optimal für alle Geräte)
+- **Größen**: Klar abgestuft, mobile-optimiert
+- **Gewichte**: 400 (normal), 600 (medium), 700 (bold)
+
+### Layout:
+- **Container**: Max-width 800px, zentriert
+- **Cards**: Weiße Boxen mit subtilen Schatten
+- **Buttons**: Große Touch-Targets (min. 44px)
+- **Spacing**: Konsistente 8px-Grid
+
+## 🔄 3-Screen Flow
+
+### Screen 1: Timer-Auswahl
+```
+┌─────────────────────────────┐
+│      🎤 Pitch Trainer       │
+│   Professionelles Training  │
+├─────────────────────────────┤
+│                             │
+│    Timer-Einstellung:       │
+│                             │
+│  [30] [35] [40] [45] [50]   │
+│  [55] [60] [65] [70] [75]   │
+│  [80] [85] [90] [95] [100]  │
+│  [105] [110] [115] [120]    │
+│                             │
+│     Gewählt: 60 Sekunden    │
+│                             │
+│    ┌─────────────────┐      │
+│    │  🎤 Training    │      │
+│    │     starten     │      │
+│    └─────────────────┘      │
+│                             │
+└─────────────────────────────┘
+```
+
+### Screen 2: Aufnahme
+```
+┌─────────────────────────────┐
+│      🎤 Pitch Trainer       │
+├─────────────────────────────┤
+│                             │
+│        ⏱️ 00:45             │
+│      (verbleibend)          │
+│                             │
+│    🔴 AUFNAHME LÄUFT        │
+│                             │
+│  ┌─────────────────────────┐ │
+│  │ "Hallo, ich bin Klaus   │ │
+│  │ Müller von der Firma... │ │
+│  │ Wir helfen Unternehmen  │ │
+│  │ dabei, ihre Umsätze um  │ │
+│  │ 30% zu steigern..."     │ │
+│  └─────────────────────────┘ │
+│                             │
+│    ┌─────────────────┐      │
+│    │   ⏹️ Beenden    │      │
+│    └─────────────────┘      │
+│                             │
+└─────────────────────────────┘
+```
+
+### Screen 3: Analyse
+```
+┌─────────────────────────────┐
+│        Analyse-Report       │
+├─────────────────────────────┤
+│                             │
+│         Score: 78%          │
+│        ●●●●●●●○○○           │
+│                             │
+│  ✅ Zeit: 58s (Optimal)     │
+│  ⚠️  Füllwörter: 4 (Weniger)│
+│  ✅ Sentiment: Positiv      │
+│  ✅ Call-to-Action: Klar    │
+│  ✅ Spezifität: Mit Zahlen  │
+│                             │
+│  Empfehlungen:              │
+│  • Weniger "äh" verwenden   │
+│  • Mehr Pausen einbauen     │
+│                             │
+│  ┌─────────┐ ┌─────────────┐│
+│  │📋 Kopie │ │🔄 Nochmal  ││
+│  └─────────┘ └─────────────┘│
+│                             │
+└─────────────────────────────┘
+```
+
+## 🎨 Design-Prinzipien
+
+### Bedienbarkeit:
+- **Einhandbedienung**: Alle wichtigen Buttons im Daumenbereich
+- **Große Touch-Targets**: Minimum 44x44px
+- **Klare Hierarchie**: Wichtigste Aktion visuell dominant
+- **Feedback**: Sofortige visuelle Rückmeldung bei Interaktionen
+
+### Professionalität:
+- **Minimalistisch**: Nur notwendige Elemente
+- **Konsistent**: Gleiche Abstände, Farben, Schriften
+- **Business-tauglich**: Seriöse Farbgebung, klare Sprache
+- **Vertrauenswürdig**: Hochwertige Schatten, abgerundete Ecken
+
+### Accessibility:
+- **Kontrast**: WCAG AA-konform (4.5:1 minimum)
+- **Schriftgrößen**: Mobile-optimiert, gut lesbar
+- **Touch-Friendly**: Große Buttons, ausreichend Abstand
+- **Screen Reader**: Semantisches HTML
+
+## 📋 Copy-to-Clipboard Format
+
+```
+🎤 PITCH TRAINER - ANALYSE
+==========================
+Datum: 15.01.2025, 14:30
+Dauer: 58 Sekunden
+Gesamt-Score: 78%
+
+BEWERTUNG:
+✅ Zeit: Optimal (30-60s Bereich)
+⚠️ Füllwörter: 4 Stück (reduzieren)
+✅ Sentiment: Positiv
+✅ Call-to-Action: Klar formuliert
+✅ Spezifität: Konkrete Zahlen verwendet
+
+VERBESSERUNGSVORSCHLÄGE:
+• Weniger "äh" und "also" verwenden
+• Mehr bewusste Pausen einbauen
+• Stimme variieren für mehr Engagement
+
+VOLLSTÄNDIGES TRANSKRIPT:
+"[Kompletter gesprochener Text wird hier eingefügt...]"
+
+---
+Erstellt mit Pitch Trainer
+```
+
+## 🛠️ Technische Specs
+
+### Datei-Struktur:
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <style>/* Komplettes CSS */</style>
+</head>
+<body>
+    <!-- Komplettes HTML -->
+    <script>/* Komplettes JavaScript */</script>
+</body>
+</html>
+```
+
+### Funktionen:
+- **Web Speech API**: Für Live-Transkription
+- **LocalStorage**: Für History/Settings
+- **Clipboard API**: Für Copy-Funktion
+- **Responsive Design**: Mobile-first
+
+### Deployment:
+- **Single File**: Direkt auf Vercel deploybar
+- **No Build**: Statische Datei, kein Kompilieren
+- **Fast Loading**: Alles in einer Datei = 1 Request
+
+## 📊 Performance-Ziele
+
+- **Load Time**: <1 Sekunde
+- **Bundle Size**: <50KB total
+- **Mobile Optimized**: Touch-friendly, responsive
+- **Offline Ready**: Nach erstem Laden funktionsfähig
+
+**Input für Claude Flow: Diese komplette Spezifikation → Implementierung in einem einzigen HTML-File** 🎯
