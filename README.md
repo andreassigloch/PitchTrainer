@@ -2,6 +2,16 @@
 
 Professional pitch training application for practicing and analyzing sales pitches.
 
+## 📱 Quick Access
+
+<div align="center">
+<img src="pitch-trainer-qr.svg" alt="QR Code für Pitch Trainer" width="300">
+
+**Scan to access instantly!**
+
+🔗 **Live App**: https://pitch-trainer-olxvrmzjc-andreassiglochs-projects.vercel.app
+</div>
+
 ## Features
 
 - **Timer Selection**: Choose from 30-120 seconds for your pitch
